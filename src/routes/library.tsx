@@ -22,6 +22,7 @@ import {
   CloudUpload,
   Library as LibraryIcon,
 } from "lucide-react";
+import { ShareManageModal, type ShareLink, type ShareManageTarget } from "@/components/share-manage-modal";
 
 export const Route = createFileRoute("/library")({
   component: LibraryPage,
@@ -155,6 +156,23 @@ function LibraryPage() {
   const [query, setQuery] = useState("");
   const [dragOver, setDragOver] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [shareTarget, setShareTarget] = useState<ShareManageTarget | null>(null);
+  const [shareLinks, setShareLinks] = useState<ShareLink[]>([]);
+
+  const openShare = (row: ShareRow) => {
+    setShareTarget({ name: row.name, type: row.type, path: row.type === "Folder" ? "Library / " + row.name : undefined });
+    // Mock seed: build links matching row counts/status
+    const seeded: ShareLink[] = Array.from({ length: row.total }).map((_, i) => ({
+      id: `${row.id}-l${i + 1}`,
+      url: `https://drift.share/${row.id}-${i + 1}`,
+      createdAt: i === 0 ? "2 days ago" : "1 week ago",
+      status: i < row.active ? "active" : row.status === "expired" ? "expired" : "revoked",
+      views: Math.round(row.views / row.total) + (i === 0 ? row.views % row.total : 0),
+      downloads: Math.round(row.downloads / Math.max(row.total, 1)),
+      hasPassword: i === 0,
+    }));
+    setShareLinks(seeded);
+  };
 
   useEffect(() => {
     const t = setTimeout(() => setLoading(false), 1100);
@@ -544,7 +562,10 @@ function LibraryPage() {
                           <td className="px-4 py-3.5 text-right tabular-nums">{s.views}</td>
                           <td className="px-4 py-3.5 text-right tabular-nums">{s.downloads}</td>
                           <td className="px-4 py-3.5 text-right">
-                            <button className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-primary hover:bg-primary/10">
+                            <button
+                              onClick={() => openShare(s)}
+                              className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-primary hover:bg-primary/10"
+                            >
                               Manage <ChevronRight className="h-3.5 w-3.5" />
                             </button>
                           </td>
@@ -560,6 +581,13 @@ function LibraryPage() {
           Driftshare · End-to-end encrypted file sharing
         </footer>
       </div>
+
+      <ShareManageModal
+        open={!!shareTarget}
+        onClose={() => setShareTarget(null)}
+        target={shareTarget ?? { name: "", type: "File" }}
+        initialLinks={shareLinks}
+      />
     </div>
   );
 }
