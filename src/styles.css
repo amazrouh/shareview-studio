@@ -62,15 +62,23 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --radius: 1rem;
+  --accent-h: 250;
+  --accent-c: 0.18;
+  --background: oklch(0.985 0.005 260);
+  --foreground: oklch(0.16 0.03 265);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
+  --card-foreground: oklch(0.16 0.03 265);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
+  --popover-foreground: oklch(0.16 0.03 265);
+  --primary: oklch(0.55 var(--accent-c) var(--accent-h));
+  --primary-foreground: oklch(0.99 0.005 260);
+  --primary-glow: oklch(0.7 0.18 var(--accent-h));
+  --gradient-bg: radial-gradient(ellipse 80% 60% at 50% 0%, oklch(0.95 0.06 var(--accent-h)) 0%, oklch(0.985 0.005 260) 60%);
+  --gradient-accent: linear-gradient(135deg, oklch(0.6 0.2 var(--accent-h)), oklch(0.7 0.18 calc(var(--accent-h) + 20)));
+  --glass-bg: color-mix(in oklab, white 70%, transparent);
+  --glass-border: color-mix(in oklab, oklch(0.55 0.18 var(--accent-h)) 25%, transparent);
+  --shadow-glow: 0 30px 80px -20px color-mix(in oklab, oklch(0.55 0.2 var(--accent-h)) 40%, transparent);
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
   --muted: oklch(0.968 0.007 247.896);
@@ -98,14 +106,20 @@
 }
 
 .dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
+  --background: oklch(0.16 0.03 265);
+  --foreground: oklch(0.98 0.005 260);
+  --card: oklch(0.22 0.04 265);
+  --card-foreground: oklch(0.98 0.005 260);
+  --popover: oklch(0.22 0.04 265);
+  --popover-foreground: oklch(0.98 0.005 260);
+  --primary: oklch(0.7 0.18 var(--accent-h));
+  --primary-foreground: oklch(0.16 0.03 265);
+  --primary-glow: oklch(0.78 0.16 var(--accent-h));
+  --gradient-bg: radial-gradient(ellipse 90% 70% at 50% -10%, oklch(0.32 0.15 var(--accent-h)) 0%, oklch(0.12 0.04 265) 55%);
+  --gradient-accent: linear-gradient(135deg, oklch(0.65 0.2 var(--accent-h)), oklch(0.75 0.18 calc(var(--accent-h) + 25)));
+  --glass-bg: color-mix(in oklab, oklch(0.22 0.04 265) 60%, transparent);
+  --glass-border: color-mix(in oklab, oklch(0.7 0.2 var(--accent-h)) 35%, transparent);
+  --shadow-glow: 0 40px 100px -20px color-mix(in oklab, oklch(0.5 0.25 var(--accent-h)) 50%, transparent);
   --secondary: oklch(0.279 0.041 260.031);
   --secondary-foreground: oklch(0.984 0.003 247.858);
   --muted: oklch(0.279 0.041 260.031);
@@ -142,3 +156,40 @@
     color: var(--color-foreground);
   }
 }
+
+@theme inline {
+  --color-primary-glow: var(--primary-glow);
+}
+
+@layer utilities {
+  .bg-app-gradient { background: var(--gradient-bg); }
+  .bg-accent-gradient { background: var(--gradient-accent); }
+  .glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px) saturate(140%);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-glow), inset 0 1px 0 0 color-mix(in oklab, white 15%, transparent);
+  }
+  .glass-tile {
+    background: color-mix(in oklab, var(--card) 55%, transparent);
+    backdrop-filter: blur(12px);
+    border: 1px solid color-mix(in oklab, var(--primary) 15%, transparent);
+  }
+  .text-gradient {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .ring-glow:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 35%, transparent);
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translate(0,0) scale(1); }
+  50% { transform: translate(20px,-30px) scale(1.05); }
+}
+.animate-float-slow { animation: float-slow 14s ease-in-out infinite; }
