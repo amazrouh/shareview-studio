@@ -581,6 +581,13 @@ function LibraryPage() {
           Driftshare · End-to-end encrypted file sharing
         </footer>
       </div>
+
+      <ShareManageModal
+        open={!!shareTarget}
+        onClose={() => setShareTarget(null)}
+        target={shareTarget ?? { name: "", type: "File" }}
+        initialLinks={shareLinks}
+      />
     </div>
   );
 }
