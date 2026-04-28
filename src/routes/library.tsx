@@ -22,6 +22,7 @@ import {
   CloudUpload,
   Library as LibraryIcon,
 } from "lucide-react";
+import { ShareManageModal, type ShareLink, type ShareManageTarget } from "@/components/share-manage-modal";
 
 export const Route = createFileRoute("/library")({
   component: LibraryPage,
