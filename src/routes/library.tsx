@@ -562,7 +562,10 @@ function LibraryPage() {
                           <td className="px-4 py-3.5 text-right tabular-nums">{s.views}</td>
                           <td className="px-4 py-3.5 text-right tabular-nums">{s.downloads}</td>
                           <td className="px-4 py-3.5 text-right">
-                            <button className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-primary hover:bg-primary/10">
+                            <button
+                              onClick={() => openShare(s)}
+                              className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-primary hover:bg-primary/10"
+                            >
                               Manage <ChevronRight className="h-3.5 w-3.5" />
                             </button>
                           </td>
