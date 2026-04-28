@@ -156,6 +156,23 @@ function LibraryPage() {
   const [query, setQuery] = useState("");
   const [dragOver, setDragOver] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [shareTarget, setShareTarget] = useState<ShareManageTarget | null>(null);
+  const [shareLinks, setShareLinks] = useState<ShareLink[]>([]);
+
+  const openShare = (row: ShareRow) => {
+    setShareTarget({ name: row.name, type: row.type, path: row.type === "Folder" ? "Library / " + row.name : undefined });
+    // Mock seed: build links matching row counts/status
+    const seeded: ShareLink[] = Array.from({ length: row.total }).map((_, i) => ({
+      id: `${row.id}-l${i + 1}`,
+      url: `https://drift.share/${row.id}-${i + 1}`,
+      createdAt: i === 0 ? "2 days ago" : "1 week ago",
+      status: i < row.active ? "active" : row.status === "expired" ? "expired" : "revoked",
+      views: Math.round(row.views / row.total) + (i === 0 ? row.views % row.total : 0),
+      downloads: Math.round(row.downloads / Math.max(row.total, 1)),
+      hasPassword: i === 0,
+    }));
+    setShareLinks(seeded);
+  };
 
   useEffect(() => {
     const t = setTimeout(() => setLoading(false), 1100);
